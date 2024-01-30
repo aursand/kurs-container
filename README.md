@@ -14,9 +14,9 @@ Det du trenger er:
 4. Noe å bygge til en container
 
 ### Hallo, Docker! 
-I denne modlulen har vi gitt en veldig enkel .NET app som gir en klassisk "Hello, World" Du kan selv bestemme om du vil bruke denne, eller ta ditt lokale prosjekt ut i en container! 
+I denne modlulen har vi gitt en veldig enkel .NET app som gir en enkel teller eller ta ditt lokale prosjekt ut i en container! 
 
-Det hele vil foregå i filen `Dockerfile` hvor man skal skrive en "oppskrift" som Docker skal kjøre etter. Den vil fra start av se omtrent slik ut: 
+Det hele vil foregå i filen `Dockerfile` hvor man skal skrive en "oppskrift" som Docker skal kjøre etter. Den kan se slik ut:
 
 ```
 FROM  mcr.microsoft.com/dotnet/aspnet:7.0
@@ -25,4 +25,29 @@ COPY bin/Debug/net7.0/BabysFirstDockerContainer.dll .
 ENTRYPOINT [ "dotnet", "babysfirstdockercontainer.dll" ]
 ```
 
-Dette gir instruksjoner til Docker Engine om hvordan docker-filen skal oppføre seg. Denne filen skal hente ut ASPNET versjon 7.0 fra Microsoft sine nettsider via `FROM`-kommandoen, så sette `WORKDIR` til /app, altså hvor den skal starte appen fra. `COPY` kopierer 
+Dette gir instruksjoner til Docker Engine om hvordan docker-filen skal oppføre seg. Denne filen skal hente ut ASPNET versjon 7.0 fra Microsoft sine nettsider via `FROM`-kommandoen, så sette `WORKDIR` til /app, altså hvor den skal starte appen fra. `COPY` kopierer en eller flere filer til `.` som vil se container-siden sin root-folder. 
+`ENTRYPOINT` beskriver hvilken default-kommando docker-containeren skal starte med.
+
+I dette tilfellet har vi et .NET prosjekt som må ha et SDK-image og en ASPNET runtime som er påkrevd for at containeren skal kjøre. 
+
+Her kommer en stegvis visning i hvordan man kan få laget et image fra koden sin. 
+1. Først må man publishe koden man allerede har for å generere binær-filer av koden. legg merke til at man får en `bin` og `obj` mappe i etterkant av `publish`.
+
+```
+dotnet publish -c Release  
+```
+
+2. nå kan man bygge docker-imaget med følgende kommando. Husk å bytte ut placeholder for et passende navn.
+
+```
+docker build -t <docker_image_navn> -f Dockerfile .
+```
+
+3. Etter det kan kan man nå lage en container med imaget i, følg med på docker desktop mens dette kjører for å se hva som dukker opp. 
+```
+docker create --name <docker_contianer_navn> <docker_image_navn>
+```
+4. Nå kan man starte containeren lokalt med `docker start`-kommandoen:
+```
+docker start <docker_contianer_navn>
+```
