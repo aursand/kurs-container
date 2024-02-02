@@ -21,8 +21,8 @@ Det hele vil foregå i filen `Dockerfile` hvor man skal skrive en "oppskrift" so
 ```
 FROM  mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /app
-COPY bin/Debug/net7.0/BabysFirstDockerContainer.dll .
-ENTRYPOINT [ "dotnet", "babysfirstdockercontainer.dll" ]
+COPY bin/Debug/net7.0/DotNet.Docker.dll .
+ENTRYPOINT [ "dotnet", "DotNet.Docker.dll" ]
 ```
 
 Dette gir instruksjoner til Docker Engine om hvordan docker-filen skal oppføre seg. Denne filen skal hente ut ASPNET versjon 7.0 fra Microsoft sine nettsider via `FROM`-kommandoen, så sette `WORKDIR` til /app, altså hvor den skal starte appen fra. `COPY` kopierer en eller flere filer til `.` som vil se container-siden sin root-folder. 
